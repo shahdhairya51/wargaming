@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OPERATION PACIFIC SHIELD — AI Wargame Adjudication</title>
+  <meta name="description" content="AI-adjudicated crisis escalation simulator — SCSP Hackathon 2026 Wargaming Track">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🛡️</text></svg>">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=IBM+Plex+Mono:wght@400;500;700&family=Barlow+Condensed:wght@400;500;600&family=DM+Mono:wght@400;500&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- TOP BAR -->
+  <header class="top-bar" id="topBar">
+    <div class="top-bar-left">
+      <span class="commander-dot blue-dot"></span>
+      <span class="commander-label">BLUE COMMANDER — INDOPACOM</span>
+    </div>
+    <div class="top-bar-center">
+      <span class="scenario-title">OPERATION PACIFIC SHIELD</span>
+      <span class="scenario-subtitle">AI WARGAME ADJUDICATION SYSTEM</span>
+    </div>
+    <div class="top-bar-right">
+      <span class="turn-counter" id="turnCounter">MOVE 0 OF 3</span>
+      <span class="clock-display" id="clockDisplay">15 APR 2026 — D+0</span>
+    </div>
+  </header>
+
+  <!-- GDELT INTEL STRIP (horizontal, above map) -->
+  <div class="gdelt-strip" id="gdeltStrip" style="display:none;">
+    <span class="gdelt-tag">▸ GDELT 2.0</span>
+    <span class="gdelt-item">CAMEO 043/190 | CHN→USA/TWN</span>
+    <span class="gdelt-item gdelt-highlight">847 CONFLICT EVENTS</span>
+    <span class="gdelt-item">Goldstein: <span class="gdelt-negative">−6.4</span></span>
+    <span class="gdelt-item">CAMEO-112 (blockade): <span class="gdelt-highlight">12</span></span>
+    <span class="gdelt-item gdelt-status-tag">ACTIVE QUARANTINE</span>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content" id="mainContent">
+    <!-- LEFT PANEL -->
+    <aside class="left-panel" id="leftPanel">
+      <div class="panel-section">
+        <div class="section-header">MOVES</div>
+        <button class="move-btn" id="moveBtn1" data-move="1">
+          <span class="move-number">01</span>
+          <span class="move-label">MOVE 1</span>
+        </button>
+        <button class="move-btn" id="moveBtn2" data-move="2" disabled>
+          <span class="move-number">02</span>
+          <span class="move-label">MOVE 2</span>
+        </button>
+        <button class="move-btn" id="moveBtn3" data-move="3" disabled>
+          <span class="move-number">03</span>
+          <span class="move-label">MOVE 3</span>
+        </button>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="panel-section">
+        <div class="section-header" style="color: var(--accent-blue-bright); border-bottom-color: rgba(26,110,191,0.3); display: flex; justify-content: space-between; align-items: center;">
+          <span><span class="header-icon">⬡</span> INDOPACOM MUNITIONS</span>
+          <button class="toolbar-btn" id="burnRateBtn" style="padding: 2px 6px; font-size: 8px; border-color: rgba(77,168,255,0.4); color: #4DA8FF;">ANALYZE</button>
+        </div>
+        <div class="resource-panel" id="blueResourcePanel">
+          <div class="resource-row">
+            <span class="resource-label" title="Long Range Anti-Ship Missile">LRASM</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill" id="lrasmBar" style="width:100%; background: linear-gradient(90deg, #1A6EBF, #4DA8FF);"></div></div>
+            <span class="resource-value" id="lrasmValue" style="color: #4DA8FF;">450</span>
+          </div>
+          <div class="resource-row">
+            <span class="resource-label" title="Standard Missile 6">SM-6</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill" id="sm6Bar" style="width:100%; background: linear-gradient(90deg, #1A6EBF, #4DA8FF);"></div></div>
+            <span class="resource-value" id="sm6Value" style="color: #4DA8FF;">1500</span>
+          </div>
+          <div class="resource-row">
+            <span class="resource-label" title="Heavyweight Torpedoes">MK 48</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill" id="mk48Bar" style="width:100%; background: linear-gradient(90deg, #1A6EBF, #4DA8FF);"></div></div>
+            <span class="resource-value" id="mk48Value" style="color: #4DA8FF;">100%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="panel-section">
+        <div class="section-header" style="color: var(--accent-amber); border-bottom-color: rgba(212,132,26,0.3);">
+          <span class="header-icon">✦</span> MULTI-DOMAIN STATUS
+        </div>
+        <div class="threat-indicators" style="padding-top: 4px; gap: 4px; display: flex; flex-direction: column;">
+          <div class="threat-row" style="margin-bottom: 0;">
+            <span class="threat-label" style="font-size: 9px; letter-spacing: 0.1em; margin-bottom: 0;">LINK-16 (SATCOM)</span>
+            <span class="threat-status" id="link16Status" style="color: #00FF88; font-size: 10px;">OPTIMAL</span>
+          </div>
+          <div class="threat-row" style="margin-bottom: 0;">
+            <span class="threat-label" style="font-size: 9px; letter-spacing: 0.1em; margin-bottom: 0;">TAIWAN CYBER GRID</span>
+            <span class="threat-status" id="cyberStatus" style="color: #00FF88; font-size: 10px;">100%</span>
+          </div>
+          <div class="threat-row" style="margin-bottom: 0;">
+            <span class="threat-label" style="font-size: 9px; letter-spacing: 0.1em; margin-bottom: 0;">EARLY WARNING RADAR</span>
+            <span class="threat-status" id="radarStatus" style="color: #00FF88; font-size: 10px;">ACTIVE</span>
+          </div>
+        </div>
+      </div>
+
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="panel-section">
+        <div class="section-header">TAIWAN STRATEGIC RESERVES</div>
+        <div class="resource-panel" id="resourcePanel">
+          <div class="resource-row">
+            <span class="resource-label">LNG</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill" id="lngBar" style="width:100%; background: linear-gradient(90deg, #C23B22, #E84C2E);"></div></div>
+            <span class="resource-value" id="lngValue">11 days</span>
+          </div>
+          <div class="resource-row">
+            <span class="resource-label">COAL</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill" id="coalBar" style="width:100%; background: linear-gradient(90deg, #BA7517, #E89B20);"></div></div>
+            <span class="resource-value" id="coalValue">41 days</span>
+          </div>
+          <div class="resource-row">
+            <span class="resource-label">OIL</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill" id="oilBar" style="width:100%; background: linear-gradient(90deg, #1A7A4A, #2A9B5F);"></div></div>
+            <span class="resource-value" id="oilValue">146 days</span>
+          </div>
+          <div class="resource-row">
+            <span class="resource-label">CAS</span>
+            <div class="resource-bar-track"><div class="resource-bar-fill casualty-bar" id="casBar" style="width:0%;"></div></div>
+            <span class="resource-value" id="casValue">0</span>
+          </div>
+          <div class="resource-row">
+            <span class="resource-label">JAPAN</span>
+            <div class="resource-bar-track"></div>
+            <span class="resource-value japan-status" id="japanValue">UNKNOWN</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="panel-section">
+        <div class="section-header">THREAT INDICATORS</div>
+        <div class="threat-indicators">
+          <div class="threat-row">
+            <span class="threat-label">DF-21D</span>
+            <span class="threat-status standby" id="df21Status">STANDBY</span>
+          </div>
+          <div class="threat-row">
+            <span class="threat-label">DF-26</span>
+            <span class="threat-status undetected" id="df26Status">UNDETECTED</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-divider"></div>
+
+      <div class="panel-section">
+        <button class="demo-mode-btn" id="demoModeBtn" title="Toggle Demo Mode">◉ DEMO MODE</button>
+      </div>
+    </aside>
+
+    <!-- MAP CENTER -->
+    <section class="map-container" id="mapContainer">
+      <div id="map"></div>
+      <!-- Map Toolbar (top-left) -->
+      <div class="map-toolbar" id="mapToolbar">
+        <button class="toolbar-btn" id="addUnitBtn" title="Add custom unit marker">+ ADD UNIT</button>
+        <button class="toolbar-btn" id="undoDragBtn" title="Undo last drag" style="display:none;">↩ UNDO</button>
+        <button class="toolbar-btn" id="etaRulerBtn" title="Calculate Time to Target">📏 ETA RULER</button>
+        <div class="toolbar-divider"></div>
+        <button class="toolbar-btn" id="threatRangesBtn" title="Toggle A2/AD Threat Rings">⭕ RINGS</button>
+        <button class="toolbar-btn" id="timeRingsBtn" title="Toggle Red Time-Radius">⏳ TIME RINGS</button>
+        <button class="toolbar-btn" id="metocBtn" title="Toggle METOC Weather Data">☁ METOC</button>
+        <button class="toolbar-btn" id="casualtyBtn" title="Toggle Casualty Heatmap" style="color: #FF4500; border-color: rgba(255,69,0,0.3);">🔥 LOSSES</button>
+        <div class="toolbar-divider"></div>
+        <button class="toolbar-btn filter-btn active" data-filter="all">ALL</button>
+        <button class="toolbar-btn filter-btn" data-filter="air">AIR</button>
+        <button class="toolbar-btn filter-btn" data-filter="sea">SEA</button>
+        <button class="toolbar-btn filter-btn" data-filter="land">LAND</button>
+        <div class="toolbar-divider"></div>
+        <button class="toolbar-btn" id="aiAdvisorBtn" onclick="runAIDoctrineSearch()" style="color: #00FF88; border-color: rgba(0,255,136,0.3);">✦ AI ADVISOR</button>
+      </div>
+      <!-- Unit Key (top-right, collapsible) -->
+      <div class="unit-legend" id="unitLegend">
+        <div class="unit-legend-header">
+          <span class="unit-legend-title">UNIT KEY</span>
+          <button class="legend-toggle" id="legendToggle" title="Collapse/Expand">−</button>
+        </div>
+        <div class="unit-legend-body" id="legendBody">
+          <div class="unit-legend-section" id="legend-blue-sec">BLUE FORCE (US/ALLIED)</div>
+          <div class="ul-row blue-text"><span class="ul-code">CVN</span>Aircraft Carrier (Reagan)</div>
+          <div class="ul-row blue-text"><span class="ul-code">CG</span>Guided-Missile Cruiser</div>
+          <div class="ul-row blue-text"><span class="ul-code">DDG</span>Guided-Missile Destroyer</div>
+          <div class="ul-row blue-text"><span class="ul-code">SSN</span>Attack Submarine (Seawolf)</div>
+          <div class="ul-row blue-text"><span class="ul-code">P-8</span>Maritime Patrol Aircraft</div>
+          <div class="ul-row blue-text"><span class="ul-code">B-21</span>Stealth Bomber (Raider)</div>
+          <div class="ul-row blue-text"><span class="ul-code">AB</span>Air Base (Kadena)</div>
+          <div class="ul-row blue-text"><span class="ul-code">ROC</span>Taiwan Navy Fleet</div>
+          <div class="ul-row blue-text"><span class="ul-code">JMSDF</span>Japan Maritime Self-Defense</div>
+          <div class="unit-legend-section" id="legend-red-sec">RED FORCE (PLA)</div>
+          <div class="ul-row red-text"><span class="ul-code">CV</span>PLA Aircraft Carrier</div>
+          <div class="ul-row red-text"><span class="ul-code">DDG</span>PLA Destroyer (Type 055)</div>
+          <div class="ul-row red-text"><span class="ul-code">CCG</span>Coast Guard (Haijing)</div>
+          <div class="ul-row red-text"><span class="ul-code">MM</span>Maritime Militia (PAFMM)</div>
+          <div class="ul-row red-text" id="leg-R-09" style="display:none;"><span class="ul-code">SSN</span>PLA Attack Submarine</div>
+          <div class="ul-row red-text"><span class="ul-code">DF-21</span>Anti-Ship Ballistic Missile</div>
+          <div class="ul-row red-text" id="leg-R-08" style="display:none;"><span class="ul-code">DF-26</span>"Guam Killer" IRBM</div>
+          <div class="ul-row red-text"><span class="ul-code">J-20</span>Stealth Fighter Wing</div>
+          <div class="ul-row red-text"><span class="ul-code">H-6K</span>Strategic Bomber Wing</div>
+          <div class="unit-legend-section" id="legend-neutral-sec">NEUTRAL</div>
+          <div class="ul-row neutral-text"><span class="ul-code">MV</span>LNG Tanker (Pacific Jade)</div>
+          <div class="ul-row neutral-text"><span class="ul-code">LNG</span>Taiwan LNG Terminal</div>
+        </div>
+      </div>
+
+      <!-- METOC Legend (bottom-left, absolute) -->
+      <div class="metoc-legend" id="metocLegend" style="display: none;">
+        <div class="metoc-legend-header">METOC: WIND SPEED</div>
+        <div class="metoc-legend-body">
+          <div class="metoc-row"><div class="metoc-color" style="background: rgba(0, 150, 255, 0.4);"></div> 10-20 kts (Calm)</div>
+          <div class="metoc-row"><div class="metoc-color" style="background: rgba(0, 255, 100, 0.4);"></div> 30-40 kts (Rough)</div>
+          <div class="metoc-row"><div class="metoc-color" style="background: rgba(255, 150, 0, 0.4);"></div> 50-60 kts (Gale)</div>
+          <div class="metoc-row"><div class="metoc-color" style="background: rgba(255, 0, 50, 0.4);"></div> 80+ kts (Typhoon)</div>
+        </div>
+      </div>
+
+      <!-- Force Legend (bottom-left) -->
+      <div class="force-legend">
+        <span class="legend-item"><span class="legend-dot blue-dot"></span>BLUE</span>
+        <span class="legend-item"><span class="legend-dot red-dot"></span>RED</span>
+        <span class="legend-item"><span class="legend-dot hidden-dot"></span>FOG</span>
+        <span class="legend-item"><span class="legend-dot neutral-dot"></span>NEUTRAL</span>
+      </div>
+
+      <!-- Unit Detail Panel (bottom-right) -->
+      <div class="unit-detail-panel" id="unitDetailPanel">
+        <div class="detail-header">
+          <span class="detail-title" id="detailTitle">UNIT DETAILS</span>
+          <span class="detail-close" id="detailClose">✕</span>
+        </div>
+        <div class="detail-body" id="detailBody">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <aside class="right-panel" id="rightPanel">
+      <div class="panel-section">
+        <div class="section-header player-move-header">
+          <span class="header-icon">◆</span> COMMANDER ORDER
+        </div>
+        <div class="commander-order-panel" id="commanderOrderPanel">
+          <div class="panel-placeholder">Deploy forces on map or execute auto-move...</div>
+        </div>
+      </div>
+
+      <div class="panel-section diplomacy-section" id="diplomacySection" style="display:none;">
+        <label class="diplomacy-toggle">
+          <input type="checkbox" id="diplomacyToggle">
+          <span class="toggle-slider"></span>
+          <span class="toggle-label">MMCA HOTLINE — DIPLOMATIC CHANNEL</span>
+        </label>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-header amber-header">
+          <span class="header-icon pulse-icon" id="wcIcon">◈</span> WHITE CELL — AI ADJUDICATION
+        </div>
+        <div class="adjudication-panel" id="whiteCellPanel">
+          <div class="panel-placeholder">Awaiting commander input...</div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-header red-header">
+          <span class="header-icon" id="rtIcon">◈</span> RED TEAM — PLA EASTERN THEATER CMD
+        </div>
+        <div class="adjudication-panel red-team-panel" id="redTeamPanel">
+          <div class="panel-placeholder">Awaiting White Cell adjudication...</div>
+        </div>
+      </div>
+
+      <div class="panel-section">
+        <div class="section-header">TURN LOG</div>
+        <div class="turn-log" id="turnLog">
+          <div class="log-entry log-system">System initialized. Awaiting Move 1.</div>
+        </div>
+      </div>
+
+      <div class="action-buttons" id="actionButtons">
+        <button class="action-btn end-move-btn" id="endMoveBtn" style="display:none;">▶ END MOVE</button>
+        <button class="action-btn rollback-btn" id="rollbackBtn" style="display:none;">↩ ROLLBACK</button>
+        <button class="action-btn aar-btn" id="aarBtn" style="display:none;">⬟ GENERATE AAR</button>
+      </div>
+
+      <!-- CRISIS DECISION PANEL — shown only when escalation hits 9 -->
+      <div class="crisis-panel" id="crisisPanel" style="display:none;">
+        <div class="crisis-header">
+          <span class="crisis-icon">⚠</span>
+          CRISIS THRESHOLD — COMMANDER DECISION REQUIRED
+        </div>
+        <div class="crisis-body">
+          <p class="crisis-desc">Escalation has reached WAR THRESHOLD (9/10). DF-26 TELs are deployed. Andersen AFB is within engagement range. You must act now.</p>
+          <div class="crisis-actions">
+            <button class="crisis-btn diplo-btn" id="crisisDiploBtn">
+              <span class="crisis-btn-icon">✦</span>
+              ACTIVATE DIPLOMATIC CHANNEL
+              <span class="crisis-btn-sub">De-escalate → 5 (Managed Tension)</span>
+            </button>
+            <button class="crisis-btn pressure-btn" id="crisisPressureBtn">
+              <span class="crisis-btn-icon">✖</span>
+              MAINTAIN MILITARY PRESSURE
+              <span class="crisis-btn-sub">Hold at 9 — Armed Standoff</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </aside>
+  </main>
+
+  <!-- ESCALATION BAR -->
+  <footer class="escalation-container" id="escalationBar">
+    <span class="escalation-label-text">ESCALATION</span>
+    <div class="escalation-track">
+      <div class="escalation-fill" id="escalationFill" style="width: 20%;"></div>
+      <div class="escalation-markers">
+        <span class="esc-marker" style="left:0%">0</span><span class="esc-marker" style="left:10%">1</span>
+        <span class="esc-marker" style="left:20%">2</span><span class="esc-marker" style="left:30%">3</span>
+        <span class="esc-marker" style="left:40%">4</span><span class="esc-marker" style="left:50%">5</span>
+        <span class="esc-marker" style="left:60%">6</span><span class="esc-marker esc-crisis" style="left:70%">7</span>
+        <span class="esc-marker esc-crisis" style="left:80%">8</span><span class="esc-marker esc-war" style="left:90%">9</span>
+        <span class="esc-marker esc-nuclear" style="left:100%">10</span>
+      </div>
+      <div class="escalation-zones">
+        <span class="zone-label zone-stable" style="left:5%">STABLE</span>
+        <span class="zone-label zone-crisis" style="left:55%">CRISIS</span>
+        <span class="zone-label zone-war" style="left:78%">WAR</span>
+        <span class="zone-label zone-nuclear" style="left:95%">☢</span>
+      </div>
+    </div>
+    <div class="escalation-readout">
+      <span class="escalation-level-number" id="escLevel">2</span>
+      <span class="escalation-level-label" id="escLabel">BASELINE</span>
+    </div>
+  </footer>
+
+  <!-- AAR MODAL -->
+  <div class="aar-modal" id="aarModal" style="display:none;">
+    <div class="aar-document" id="aarDocument">
+      <div class="aar-close-bar">
+        <button class="aar-close-btn" id="aarCloseBtn">✕ CLOSE</button>
+        <button class="aar-download-btn" id="aarDownloadBtn">⬇ DOWNLOAD PDF</button>
+      </div>
+      <div class="aar-header-bar">CLASSIFICATION: UNCLASSIFIED // EXERCISE ONLY</div>
+      <div class="aar-content" id="aarContent"></div>
+      <div class="aar-header-bar">CLASSIFICATION: UNCLASSIFIED // EXERCISE ONLY</div>
+    </div>
+  </div>
+
+  <!-- Threat Reveal Overlay -->
+  <div class="threat-reveal-overlay" id="threatOverlay" style="display:none;">
+    <div class="threat-text">
+      <div class="threat-label">⚠ HIDDEN ASSET REVEALED</div>
+      <div class="threat-name">PLARF DF-26 "GUAM KILLER"</div>
+      <div class="threat-location">26.64°N 118.17°E — NANPING, FUJIAN</div>
+      <div class="threat-detail">8 TELs — RANGE 3,000-4,000km</div>
+    </div>
+  </div>
+
+  <!-- Custom Unit Modal -->
+  <div class="custom-unit-modal" id="customUnitModal" style="display:none;">
+    <div class="custom-unit-form">
+      <div class="custom-unit-title">DEPLOY CUSTOM UNIT</div>
+      <div class="form-group">
+        <label>DESIGNATION (2-4 chars)</label>
+        <input type="text" id="customUnitCode" maxlength="4" placeholder="e.g. F-35">
+      </div>
+      <div class="form-group">
+        <label>FULL NAME / DESCRIPTION</label>
+        <input type="text" id="customUnitDesc" placeholder="e.g. F-35 Lightning II Squadron">
+      </div>
+      <div class="form-group">
+        <label>FORCE</label>
+        <div class="side-selector">
+          <button class="side-btn blue-side active" data-side="blue">BLUE</button>
+          <button class="side-btn red-side" data-side="red">RED</button>
+          <button class="side-btn neutral-side" data-side="neutral">NEUTRAL</button>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="form-btn cancel-btn" id="customUnitCancel">CANCEL</button>
+        <button class="form-btn place-btn" id="customUnitPlace">PLACE ON MAP</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- BURN RATE MODAL -->
+  <div class="custom-unit-modal" id="burnRateModal" style="display:none;">
+    <div class="custom-unit-form" style="width: 400px;">
+      <div class="custom-unit-title" style="color: #4DA8FF; font-size: 14px; margin-bottom: 8px;">LOGISTICS BURN RATE PROJECTION</div>
+      <div style="font-size: 10px; color: var(--text-secondary); margin-bottom: 16px; border-left: 2px solid #E84C2E; padding-left: 8px;">
+        WARNING: High expenditure rates of Long-Range Anti-Ship Missiles (LRASM) and Standard Missile 6 (SM-6) will result in critical shortages ("Bingo") by D+6.
+      </div>
+      
+      <!-- Simple CSS-based bar chart representation -->
+      <div style="margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); margin-bottom: 4px;">
+          <span>LRASM STOCKPILE</span><span>BINGO @ D+6</span>
+        </div>
+        <div style="display: flex; height: 20px; gap: 2px;">
+          <div style="background: #4DA8FF; width: 100%;" title="D+0: 450"></div>
+          <div style="background: #4DA8FF; width: 85%;" title="D+1: 450"></div>
+          <div style="background: #E89B20; width: 60%;" title="D+2: 378"></div>
+          <div style="background: #E84C2E; width: 30%;" title="D+3: Projected"></div>
+          <div style="background: rgba(232,76,46,0.2); width: 15%;" title="D+4: Projected"></div>
+          <div style="background: rgba(232,76,46,0.1); width: 5%;" title="D+5: Projected"></div>
+          <div style="background: transparent; border: 1px dashed rgba(255,255,255,0.1); width: 10%;" title="D+6: BINGO"></div>
+        </div>
+        <div style="display: flex; justify-content: space-between; font-size: 8px; color: var(--text-dim); margin-top: 4px;">
+          <span>D+0</span><span>D+1</span><span>D+2</span><span>D+3</span><span>D+4</span><span>D+5</span><span>D+6</span>
+        </div>
+      </div>
+
+      <div style="margin-bottom: 24px;">
+        <div style="display: flex; justify-content: space-between; font-size: 9px; color: var(--text-dim); margin-bottom: 4px;">
+          <span>SM-6 INTERCEPTORS</span><span>CRITICAL @ D+5</span>
+        </div>
+        <div style="display: flex; height: 20px; gap: 2px;">
+          <div style="background: #4DA8FF; width: 100%;"></div>
+          <div style="background: #4DA8FF; width: 95%;"></div>
+          <div style="background: #E89B20; width: 75%;"></div>
+          <div style="background: #E89B20; width: 50%;"></div>
+          <div style="background: #E84C2E; width: 25%;"></div>
+          <div style="background: rgba(232,76,46,0.2); width: 10%;"></div>
+          <div style="background: transparent; border: 1px dashed rgba(255,255,255,0.1); width: 5%;"></div>
+        </div>
+      </div>
+      
+      <div style="display: flex; justify-content: flex-end;">
+        <button class="action-btn" id="closeBurnRateBtn" style="border-color: #4DA8FF; color: #4DA8FF;">CLOSE ANALYTICS</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ai_processor.js"></script>
+</body>
+</html>

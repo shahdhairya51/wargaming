@@ -1,0 +1,30 @@
+{
+  "blue": [
+    {"id":"B-01","name":"USS Ronald Reagan (CVN-76)","type":"carrier","lat":23.0,"lng":127.0,"icon":"blue-carrier","label":"CVN","callsign":"REAGAN","details":"CSG flagship, ~350nm east Taiwan"},
+    {"id":"B-02","name":"USS Chancellorsville (CG-62)","type":"cruiser","lat":23.2,"lng":126.8,"icon":"blue-cruiser","label":"CG","callsign":"CHSVL"},
+    {"id":"B-03","name":"USS Benfold (DDG-65)","type":"destroyer","lat":22.8,"lng":127.2,"icon":"blue-destroyer","label":"DDG","callsign":"BENFOLD"},
+    {"id":"B-04","name":"USS Seawolf (SSN-21)","type":"submarine","lat":24.5,"lng":123.0,"icon":"blue-sub","label":"SSN","callsign":"SEAWOLF"},
+    {"id":"B-05","name":"P-8 Poseidon (VP-4)","type":"aircraft","lat":24.0,"lng":125.0,"icon":"blue-aircraft","label":"P-8","callsign":"NEPTUNE"},
+    {"id":"B-06","name":"Kadena AB (F-35/F-22)","type":"airbase","lat":26.356,"lng":127.769,"icon":"blue-airbase","label":"AB","callsign":"KADENA"},
+    {"id":"B-07","name":"B-21 Raiders (Andersen AFB)","type":"bomber","lat":13.584,"lng":144.929,"icon":"blue-bomber","label":"B-21","callsign":"RAIDER"},
+    {"id":"B-08","name":"ROCN Fleet","type":"carrier","lat":25.0,"lng":121.7,"icon":"blue-allied","label":"ROC","callsign":"TAIWAN"}
+  ],
+  "red": [
+    {"id":"R-01","name":"PLAN Shandong CSG (CV-17)","type":"carrier","lat":24.5,"lng":119.5,"icon":"red-carrier","label":"CV","hidden":false},
+    {"id":"R-02","name":"Type 055 DDG Nanchang","type":"destroyer","lat":24.7,"lng":119.3,"icon":"red-destroyer","label":"DDG","hidden":false},
+    {"id":"R-03","name":"Type 052D DDG x2","type":"destroyer","lat":24.0,"lng":119.8,"icon":"red-destroyer","label":"DDG","hidden":false},
+    {"id":"R-04","name":"PLAN Fujian CSG (CV-18)","type":"carrier","lat":22.0,"lng":119.0,"icon":"red-carrier","label":"CV","hidden":false},
+    {"id":"R-05","name":"CCG Haijing-3901 + escorts","type":"coast-guard","lat":25.3,"lng":121.2,"icon":"red-ccg","label":"CCG","hidden":false},
+    {"id":"R-06","name":"PAFMM Fleet (47 vessels)","type":"militia","lat":25.8,"lng":121.0,"icon":"red-militia","label":"MM","hidden":false},
+    {"id":"R-07","name":"PLARF DF-21D (Yong'an)","type":"missile","lat":25.94,"lng":117.37,"icon":"red-missile","label":"DF-21","hidden":false,"readiness":"STANDBY"},
+    {"id":"R-08","name":"PLARF DF-26 (Nanping) — 8 TELs","type":"missile","lat":26.64,"lng":118.17,"icon":"red-missile-hidden","label":"DF-26","hidden":true,"revealOnMove":3},
+    {"id":"R-09","name":"PLAN Type 093 SSN x2","type":"submarine","lat":22.5,"lng":121.5,"icon":"red-sub-hidden","label":"SSN","hidden":true,"revealOnMove":2},
+    {"id":"R-10","name":"J-20 Stealth Fighter Wing","type":"aircraft","lat":26.0,"lng":119.5,"icon":"red-aircraft","label":"J-20","hidden":false},
+    {"id":"R-11","name":"H-6K Bomber Wing","type":"bomber","lat":25.5,"lng":118.5,"icon":"red-bomber","label":"H-6K","hidden":false}
+  ],
+  "neutral": [
+    {"id":"N-01","name":"LNG Tanker MV Pacific Jade","type":"merchant","lat":23.5,"lng":122.5,"icon":"neutral-merchant","label":"MV"},
+    {"id":"N-02","name":"Taiwan LNG Terminal (Taichung)","type":"infrastructure","lat":24.28,"lng":120.53,"icon":"neutral-port","label":"LNG"},
+    {"id":"N-03","name":"JS Onami (JMSDF)","type":"destroyer","lat":27.5,"lng":128.0,"icon":"blue-allied","label":"JMSDF"}
+  ]
+}

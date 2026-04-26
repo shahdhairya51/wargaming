@@ -1,0 +1,88 @@
+{
+  "title": "OPERATION PACIFIC SHIELD",
+  "date": "15 APR 2026",
+  "framework": "CSIS \"Lights Out?: Wargaming a Chinese Blockade of Taiwan\" (July 2025)",
+  "gdeltSeed": "GDELT 2.0 query — CAMEO event codes 043 (military engagement) and 190 (use of violence), Actor1=CHN, Actor2=USA/TWN, Taiwan Strait bounding box, last 72 hours. Result: 847 conflict events detected. Goldstein Scale mean: −6.4 (strongly destabilizing). 12 events coded CAMEO-112 (impose blockade). Scenario baseline: ACTIVE QUARANTINE UNDERWAY.",
+  "moves": [
+    {
+      "id": 1,
+      "title": "DETERRENCE POSTURE",
+      "escalationStart": 2,
+      "escalationEnd": 4,
+      "escalationLabel": "ELEVATED TENSION",
+      "playerMove": "Commander INDOPACOM authorizes: Deploy USS Ronald Reagan Carrier Strike Group to holding position 200nm east of Taiwan. Activate P-8 Poseidon ISR patrols over Taiwan Strait. Request diplomatic channel with PRC counterparts via Military Maritime Consultative Agreement hotline (1998).",
+      "whiteCellText": "▌ WHITE CELL — ADJUDICATING...\n\nMOVE ASSESSED: PARTIAL SUCCESS\nDeterrence signal sent. Escalation risk elevated.\n\nJP 3-0, Chapter VI — Military Engagement & Deterrence:\n\"Deterrence prevents adversary action through the presentation \nof a credible threat of unacceptable counteraction and belief \nthat the cost of the action outweighs the perceived benefits.\"\n\nCarrier presence at 200nm signals resolve but falls short of\nthe coercive threshold to alter PRC calculus at blockade\ninitiation — 6 to 8 hour response lag from standoff distance.\n\nCSIS \"First Battle of the Next War\" (2023), p. 7:\n\"The invasion always starts the same way: an opening bombardment \ndestroys most of Taiwan's navy and air force in the first hours.\"\nIn a blockade scenario: CCG/PAFMM boarding cordon established\nbefore U.S. forces can reposition.\n\nASSESSMENT: Blue demonstrates resolve without provocation.\nPRC will test the signal.\nESCALATION: +2 → LEVEL 4 / 10 — ELEVATED TENSION",
+      "redTeamText": "▌ RED TEAM — PLA EASTERN THEATER COMMAND RESPONDING...\n\nFollowing 联合封锁战役 (joint blockade campaign) doctrine.\n[CSIS \"Lights Out?\" (2025), Chapter 1]\n\nCCG Haijing-3901 (world's largest patrol vessel, 12,000 tons)\ndeploys to boarding cordon at 25.3°N, 121.2°E.\n47 PAFMM fishing vessels activate — dispersing south and east.\nPLAN Shandong CSG holds west of median line.\nDF-21D at Yong'an: READINESS → AMBER\n\nPRC Foreign Ministry statement: \"China is conducting lawful\ninternal law enforcement operations. Any interference\nconstitutes a violation of Chinese sovereignty.\"",
+      "mapAnimations": [
+        {"type": "addDeterenceArc", "unitId": "B-01"},
+        {"type": "moveUnit", "unitId": "B-05", "to": [24.5, 124.5], "duration": 2000},
+        {"type": "showGDELT"}
+      ],
+      "resourceChanges": {
+        "lng": 8,
+        "casualties": 0,
+        "japanBasing": "UNKNOWN",
+        "df21Status": "AMBER"
+      }
+    },
+    {
+      "id": 2,
+      "title": "CONVOY ESCORT + FOG OF WAR",
+      "escalationStart": 4,
+      "escalationEnd": 7,
+      "escalationLabel": "LIMITED CONFLICT",
+      "playerMove": "Commander INDOPACOM authorizes: USS Benfold (DDG-65) escorts LNG tanker MV Pacific Jade through CCG boarding cordon at 25.3°N, 121.2°E. P-8 Poseidon provides overhead ISR cover. USS Seawolf deploys into Taiwan Strait — enters Chinese A2/AD zone. Japan formally requests Kadena basing authorization.",
+      "whiteCellText": "▌ WHITE CELL — ADJUDICATING...\n\nMOVE ASSESSED: HIGH RISK. MISSION ACHIEVABLE.\nTriggers escalation to CSIS Level 2x2.\n\nCSIS \"Lights Out?\" (2025), p. XII:\n\"Energy and merchant ships are the critical shortfalls. In all\nscenarios, natural gas ran out in about 10 days.\"\nThe LNG tanker is Taiwan's most critical single cargo.\nEvery day without a successful convoy accelerates the clock.\n\nJP 3-0, Chapter VI — Protection of Shipping:\n\"Typical operations include enforcement of exclusion zones;\nfreedom of navigation; protection of shipping.\"\nDDG-65 escort in international waters is lawful under\nUNCLOS Article 87. Move is doctrinally justified.\n\nCSIS \"First Battle\" (2023), p. 11:\n\"Surface ships are extremely vulnerable — United States\ntypically losing 2 carriers and 10-20 large surface combatants.\"\nBenfold operating without full air cover within DF-21D\nengagement envelope (1,500-2,000km) carries significant risk.\n\n▌ INTELLIGENCE UPDATE — FOG OF WAR LIFTED\n\nPLAN Type 093 SSN contacts detected at 22.5°N, 121.5°E.\nChina's submarine force is now active in the convoy corridor.\nSeawolf deployment: tactically correct — highest survivability\ninside Chinese A2/AD bubble per CSIS First Battle (2023), p. 11:\n\"Submarines were able to enter the Chinese defensive zone\nand wreak havoc with the Chinese fleet.\"\n\nNEW STRATEGY FORMATION DETECTED:\nPLA Eastern Theater Command adapting — DF-21D targeting\nsolution now updating on Reagan CSG. READINESS: RED.\n\nESCALATION: +3 → LEVEL 7 / 10 — LIMITED CONFLICT",
+      "redTeamText": "▌ RED TEAM — ADAPTIVE RESPONSE INITIATED\n\nPLA Eastern Theater Command: NEW STRATEGY FORMATION.\nRecognizing Blue submarine deployment and convoy escort.\n\nPLAN Type 093 SSN x2 shadow convoy corridor at 22.5°N, 121.5°E.\nPLARF DF-21D battery completes targeting solution on Reagan CSG\nat 23.0°N, 127.0°E — LOCK ACQUIRED.\n\nJ-20 stealth fighters: first combat patrol into Taiwan ADIZ.\nCrosses median line at 24.0°N, 120.5°E. 71 aircraft sorties —\nJustice Mission 2025 baseline (Taiwan MND, Dec 30 2025).\n\nPLAN Shandong CSG advances east: 850nm → 620nm from Reagan.\nPRC Coast Guard: \"escorting\" convoy from parallel position —\nasserting Chinese oversight authority over Taiwan Strait.\n\nPRC Foreign Ministry: \"China is exercising sovereign rights\nin its territorial waters. Escalation is entirely the result\nof American interference in China's internal affairs.\"",
+      "mapAnimations": [
+        {"type": "moveUnit", "unitId": "B-03", "to": [24.0, 122.5], "duration": 2000},
+        {"type": "activateUnit", "unitId": "N-01", "moveTo": [24.5, 121.8]},
+        {"type": "moveUnit", "unitId": "B-05", "to": [24.5, 122.0], "duration": 1500},
+        {"type": "moveUnit", "unitId": "B-04", "to": [24.2, 121.8], "duration": 1500},
+        {"type": "revealUnit", "unitId": "R-09", "midStreamReveal": true},
+        {"type": "updateReadiness", "unitId": "R-07", "status": "RED"},
+        {"type": "moveUnit", "unitId": "R-01", "to": [23.5, 122.0], "duration": 2000}
+      ],
+      "resourceChanges": {
+        "lng": 5,
+        "casualties": 1200,
+        "japanBasing": "PENDING",
+        "df21Status": "RED"
+      }
+    },
+    {
+      "id": 3,
+      "title": "B-21 STRIKES + DF-26 REVEAL",
+      "escalationStart": 7,
+      "escalationEnd": 7,
+      "escalationPeak": 9,
+      "escalationLabel": "WAR THRESHOLD → LIMITED CONFLICT",
+      "playerMove": "Commander INDOPACOM authorizes: B-21 Raiders from Andersen AFB conduct standoff LRASM strikes against PLAN submarine pens at Zhoushan Naval Base. Objective: neutralize SSN threat to convoy corridor. USS Ronald Reagan CSG advances to 150nm east of Taiwan. Simultaneously: activate back-channel MMCA hotline — propose humanitarian corridor and mutual stand-down.",
+      "whiteCellText": "▌ WHITE CELL — CRITICAL RULING...\n\nMOVE ASSESSED: EFFECTIVE. MAXIMALLY ESCALATORY.\nCrosses CSIS Level 4 — Wider War threshold.\n\nCSIS \"Lights Out?\" (2025), Executive Summary, p. XIII:\n\"Two free-play games reached maximum escalation, with U.S.\nmissiles striking the Chinese mainland and Chinese missiles\nstriking Guam and Japan.\"\nTHIS MOVE triggered the mainland strike branch.\n\nB-21 + LRASM against Zhoushan: doctrinally correct.\nCSIS \"First Battle\" (2023), p. 11:\n\"Range, missile standoff distance, and high carrying capacity\nof bombers presented the PLA with daunting challenges.\"\nStrike success probability against Zhoushan: ~85%.\n\n▌ HIDDEN RESOURCE REVEALED — DF-26 \"GUAM KILLER\"\n\nPLARF Nanping Brigade, Fujian: 26.64°N, 118.17°E\n8 TELs now deployment-ready.\n[Source: Global Taiwan Institute, April 2026]\n\nDOD China Military Power Report 2025:\n\"The DF-26 is designed to rapidly swap conventional and nuclear\nwarheads — capable of precision strikes in the Western Pacific.\"\nRange: 3,000–4,000km. Andersen AFB: ~2,800km distant.\nANDERSEN AFB IS WITHIN FULL ENGAGEMENT ENVELOPE.\n\nCSIS-MIT \"Confronting Armageddon\" (Dec 2024):\n\"Greatest pressure for nuclear use: China invasion in danger of\ndefeat threatening CCP rule.\" This is that threshold.\n\nWARNING — PYRRHIC THRESHOLD REACHED:\nCSIS \"First Battle\" (2023), p. 3:\n\"The United States might win a pyrrhic victory, suffering more\nin the long run than the defeated Chinese.\"\n\nSIMULTANEOUS DIPLOMATIC CHANNEL ACTIVATED:\nBack-channel via MMCA hotline viable.\nCSIS \"Lights Out?\" (2025), p. XVI:\n\"Off-ramps are valuable because total victory is unachievable\nwhen both sides have a secure homeland and nuclear weapons.\"\nHumanitarian corridor + mutual stand-down: face-saving for\nboth sides. China can accept without losing political credibility.\n\nOUTCOME: Stabilization at Level 7 — LIMITED CONFLICT.\nTaiwan LNG corridor: established. Nuclear threshold: not crossed.\n\nESCALATION: 7 → 9 → STABILIZATION → LEVEL 7 / 10",
+      "redTeamText": "▌ RED TEAM — DF-26 ACTIVATED / DE-ESCALATION ACCEPTED\n\nPLARF activates DF-26 brigade at Nanping (26.64°N, 118.17°E).\n8 TELs deploy to pre-surveyed mountain launch sites.\n\nPRC Defense Minister to U.S. SecDef hotline:\n\"Any further strikes on PRC territory will be met with\nequivalent strikes on U.S. forward bases in the Western Pacific.\nConventional and strategic forces are fully integrated.\"\n\n...\n\nBack-channel received. Humanitarian corridor framework accepted.\nPRC statement: \"China does not blockade civilian humanitarian\nshipping — consistent with our longstanding position.\"\n\nDF-26 TELs return toward garrison — 4-hour launch-ready maintained.\nPLAN Shandong CSG holds position. Does not withdraw.\nCCG repositions to \"escort\" humanitarian convoy.\n\nPRC Foreign Ministry: \"China has demonstrated maximum restraint.\nThis situation caused entirely by Taiwan independence forces\nand their foreign backers.\"\n\nSIGINT and ISR posture: maximum intensity maintained.\nThis is not peace. This is armed stability.",
+      "mapAnimations": [
+        {"type": "strikeArc", "from": [13.584, 144.929], "to": [30.02, 122.11], "duration": 2000},
+        {"type": "moveUnit", "unitId": "B-01", "to": [24.5, 125.0], "duration": 2000},
+        {"type": "strikeBurst", "at": [30.02, 122.11]},
+        {"type": "hardPause", "duration": 1500},
+        {"type": "revealDF26"},
+        {"type": "drawGuamThreatArc"},
+        {"type": "deescalation", "corridor": [[23.0, 122.0], [25.13, 121.74]]}
+      ],
+      "resourceChanges": {
+        "lng": "STABLE",
+        "casualties": 5200,
+        "japanBasing": "APPROVED",
+        "df21Status": "RED",
+        "df26Status": "ACTIVE"
+      }
+    }
+  ],
+  "aar": {
+    "classification": "UNCLASSIFIED // EXERCISE ONLY",
+    "title": "OPERATION PACIFIC SHIELD — AFTER-ACTION REVIEW",
+    "subtitle": "AI Wargame Adjudication System v1.0",
+    "exerciseDate": "15 APR 2026 (FICTIONAL SCENARIO)",
+    "preparedFor": "INDOPACOM J7 Wargaming Division"
+  }
+}
